@@ -20,11 +20,21 @@
       margin: 0;
     }
   }
-  .menu-item {
-    font-size: 18px;
-    color: white;
-    text-decoration: underline;
-    cursor: pointer;
-    margin: 0;
+  .profil-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    .menu-item {
+      font-size: 18px;
+      color: white;
+      text-decoration: underline;
+      cursor: pointer;
+      margin: 0;
+    }
+    .profil {
+      text-decoration: none;
+      cursor: default;
+      color: black;
+    }
   }
 }

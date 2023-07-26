@@ -17,10 +17,10 @@ const Icon = ({ img }) => {
 
 const Footer = () => {
   return (
-    <footer class="footer">
-      <div class="footer-top">
-        <div class="social-media">
-          <div class="social-icons">
+    <footer className="footer">
+      <div className="footer-top">
+        <div className="social-media">
+          <div className="social-icons">
             <Icon img={FacebookIcon} />
             <Icon img={TwitterIcon} />
             <Icon img={InstagramIcon} />
@@ -28,8 +28,8 @@ const Footer = () => {
           </div>
         </div>
       </div>
-      <div class="footer-bottom">
-        <ul class="footer-menu">
+      <div className="footer-bottom">
+        <ul className="footer-menu">
           <li>
             <p className="title">About Us</p>
             <p>

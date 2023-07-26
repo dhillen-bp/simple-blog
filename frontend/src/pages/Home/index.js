@@ -27,7 +27,7 @@ const Home = () => {
     setCounter(counter === page.totalPage ? page.totalPage : counter + 1);
   };
 
-  const confrimDelete = (id) => {
+  const confirmDelete = (id) => {
     confirmAlert({
       title: "Confirm to delete",
       message: "Are you sure delete this?",
@@ -74,7 +74,7 @@ const Home = () => {
               name={blog.author.name}
               date={blog.createdAt.substring(0, 10)}
               _id={blog._id}
-              onDelete={confrimDelete}
+              onDelete={confirmDelete}
             />
           );
         })}
