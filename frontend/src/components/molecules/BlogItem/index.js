@@ -1,8 +1,7 @@
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Button, Gap } from "../../atoms";
 import "./blogItem.scss";
-import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import { auth } from "../../../utils/firebase_config";
@@ -17,15 +16,12 @@ const BlogItem = (props) => {
       // https://firebase.google.com/docs/reference/js/auth.user
       const uid = user.uid;
       console.log("user onAuth: ", user);
-      // ...
+      return true;
     } else {
       // User is signed out
       // ...
+      return false;
     }
-  });
-  console.log("user login: ", auth.currentUser);
-  const isAuthenticated = useSelector((state) => {
-    return auth.currentUser !== null;
   });
 
   const { image, title, name, date, body, _id, onDelete } = props;
@@ -38,7 +34,7 @@ const BlogItem = (props) => {
           <p className="title">{title}</p>
 
           <div className="edit-wrapper">
-            {isAuthenticated && (
+            {onAuthStateChanged && (
               <>
                 <p
                   className="edit"
