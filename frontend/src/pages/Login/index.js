@@ -10,6 +10,7 @@ import { auth } from "../../utils/firebase_config";
 import {
   signInWithEmailAndPassword,
   signInWithPopup,
+  sendPasswordResetEmail,
   GoogleAuthProvider,
 } from "firebase/auth";
 const provider = new GoogleAuthProvider();
@@ -33,7 +34,7 @@ const Login = () => {
         console.log("token: ", token);
         console.log("user: ", user);
 
-        navigate("/user/show");
+        navigate("/");
       })
       .catch((error) => {
         // Handle Errors here.
@@ -70,6 +71,20 @@ const Login = () => {
       });
   };
 
+  // need to fill the email
+  const handleResetPassword = () => {
+    sendPasswordResetEmail(auth, email)
+      .then(() => {
+        // Password reset email sent!
+        console.log("Password reset email sent!");
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // ..
+      });
+  };
+
   const navigate = useNavigate();
   return (
     <div className="main-page">
@@ -99,6 +114,7 @@ const Login = () => {
             navigate("/register");
           }}
         />
+        <Link title="Lupa Password? Reset" onClick={handleResetPassword} />
         <button
           type="submit"
           className="btn btn-secondary w-100 mb-3"

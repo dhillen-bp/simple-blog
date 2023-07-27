@@ -14,6 +14,7 @@ const Header = () => {
     signOut(auth)
       .then(() => {
         // Sign-out successful.
+        localStorage.removeItem("userProfile"); // Clear user profile from local storage
         navigate("/login");
       })
       .catch((error) => {
@@ -23,19 +24,29 @@ const Header = () => {
   };
 
   useEffect(() => {
-    // Ambil informasi pengguna yang sedang login
-    const user = auth.currentUser;
+    // Retrieve user profile data from local storage on page refresh
+    const storedUserProfile = JSON.parse(localStorage.getItem("userProfile"));
 
-    if (user !== null) {
-      // Dapatkan data dari provider (misalnya Google)
-      const providerData = user.providerData[0];
+    if (storedUserProfile) {
+      setUserProfile(storedUserProfile);
+    } else {
+      // If no stored user profile, fetch from Firebase Auth
+      const user = auth.currentUser;
 
-      // Simpan data pengguna ke dalam state
-      setUserProfile({
-        displayName: providerData.displayName,
-        email: providerData.email,
-        photoURL: providerData.photoURL,
-      });
+      if (user !== null) {
+        const providerData = user.providerData[0];
+        const userProfileData = {
+          displayName: providerData.displayName,
+          email: providerData.email,
+          // photoURL: providerData.photoURL,
+        };
+
+        // Store user profile data in local storage
+        localStorage.setItem("userProfile", JSON.stringify(userProfileData));
+
+        // Set userProfile state
+        setUserProfile(userProfileData);
+      }
     }
   }, []);
 

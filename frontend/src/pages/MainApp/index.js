@@ -5,6 +5,7 @@ import CreateBlog from "../CreateBlog";
 import DetailBlog from "../DetailBlog";
 import Home from "../Home";
 import "./mainApp.scss";
+import PrivateRoute from "../../config/routes/privateRoute";
 
 const MainApp = () => {
   return (
@@ -14,8 +15,23 @@ const MainApp = () => {
       </div>
       <div className="content-wrapper">
         <Switch>
-          <Route path="/create-blog/:id?" element={<CreateBlog />}></Route>
-          <Route path="/detail-blog/:id" element={<DetailBlog />}></Route>
+          {/* <Route path="/create-blog/:id?" element={<CreateBlog />}></Route> */}
+          <Route
+            path="/create-blog/:id?"
+            element={
+              <PrivateRoute>
+                <CreateBlog />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/detail-blog/:id"
+            element={
+              <PrivateRoute>
+                <DetailBlog />
+              </PrivateRoute>
+            }
+          ></Route>
           <Route path="/" element={<Home />}></Route>
         </Switch>
       </div>
