@@ -26,14 +26,15 @@ const Login = () => {
       .then((result) => {
         // This gives you a Google Access Token. You can use it to access the Google API.
         const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
+        const token = credential.idToken;
         // The signed-in user info.
         const user = result.user;
         // IdP data available using getAdditionalUserInfo(result)
         // ...
         console.log("token: ", token);
         console.log("user: ", user);
-
+        sessionStorage.setItem("accessToken", token);
+        console.log(localStorage);
         navigate("/");
       })
       .catch((error) => {
@@ -53,7 +54,9 @@ const Login = () => {
       .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
+        const token = userCredential.idToken;
         if (user.emailVerified) {
+          sessionStorage.setItem("accessToken", token);
           navigate("/");
           console.log("user: ", user);
         } else {

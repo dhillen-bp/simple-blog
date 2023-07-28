@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React from "react";
+import React, { useState } from "react";
 import { Button, Gap } from "../../atoms";
 import "./blogItem.scss";
 import { useNavigate } from "react-router-dom";
@@ -9,18 +9,19 @@ import { onAuthStateChanged } from "firebase/auth";
 
 const BlogItem = (props) => {
   const navigate = useNavigate();
+  const [userOnAuthChanged, setUserOnAuthChanged] = useState(false);
 
   onAuthStateChanged(auth, (user) => {
     if (user) {
       // User is signed in, see docs for a list of available properties
       // https://firebase.google.com/docs/reference/js/auth.user
-      const uid = user.uid;
+      // const uid = user.uid;
       console.log("user onAuth: ", user);
-      return true;
+      setUserOnAuthChanged(true);
     } else {
       // User is signed out
       // ...
-      return false;
+      setUserOnAuthChanged(false);
     }
   });
 
@@ -34,7 +35,7 @@ const BlogItem = (props) => {
           <p className="title">{title}</p>
 
           <div className="edit-wrapper">
-            {onAuthStateChanged && (
+            {userOnAuthChanged && (
               <>
                 <p
                   className="edit"

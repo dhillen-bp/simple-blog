@@ -28,6 +28,8 @@ const Home = () => {
   };
 
   const confirmDelete = (id) => {
+    const token = sessionStorage.getItem("accessToken");
+    console.log("delete token: ", token);
     confirmAlert({
       title: "Confirm to delete",
       message: "Are you sure delete this?",
@@ -36,7 +38,11 @@ const Home = () => {
           label: "Yes",
           onClick: () =>
             axios
-              .delete(`http://localhost:4000/v1/blog/post/${id}`)
+              .delete(`http://localhost:4000/v1/blog/post/${id}`, {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              })
               .then((res) => {
                 dispatch(setDataBlog(counter));
               })

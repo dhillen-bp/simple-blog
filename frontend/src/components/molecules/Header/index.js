@@ -14,7 +14,9 @@ const Header = () => {
     signOut(auth)
       .then(() => {
         // Sign-out successful.
+
         localStorage.removeItem("userProfile"); // Clear user profile from local storage
+        sessionStorage.clear();
         navigate("/login");
       })
       .catch((error) => {

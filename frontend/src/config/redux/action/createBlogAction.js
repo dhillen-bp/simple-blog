@@ -1,5 +1,7 @@
 import axios from "axios";
 
+const token = sessionStorage.getItem("accessToken");
+
 export const setForm = (formType, formValue) => {
   return { type: "SET_FORM_DATA", formType, formValue };
 };
@@ -18,6 +20,7 @@ export const postToAPI = (form) => {
     .post("http://localhost:4000/v1/blog/post", data, {
       headers: {
         "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
       },
     })
     .then((res) => {
@@ -38,6 +41,7 @@ export const updateToAPI = (form, id) => {
     .put(`http://localhost:4000/v1/blog/post/${id}`, data, {
       headers: {
         "Content-Type": "multipart/form-data",
+        Authorization: `Bearer ${token}`,
       },
     })
     .then((res) => {
