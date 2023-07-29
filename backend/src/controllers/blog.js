@@ -2,6 +2,7 @@ const { validationResult } = require("express-validator");
 const BlogPost = require("../models/blog");
 const path = require("path");
 const fs = require("fs");
+const { auth } = require("../../config/firebaseConfig");
 
 exports.createBlogPost = (req, res, next) => {
   const errors = validationResult(req);
@@ -26,13 +27,19 @@ exports.createBlogPost = (req, res, next) => {
   const image = req.file.path;
   const body = req.body.body;
 
+  const user = req.user;
+  console.log("req.user: ", user);
+  if (!user) {
+    res.status(401).json({ user, message: "Author not authenticated!" });
+  }
+
   const Posting = new BlogPost({
     title: title,
     body: body,
     image: image,
     author: {
-      uid: 1,
-      name: "Author",
+      uid: "1",
+      name: "user",
     },
   });
 

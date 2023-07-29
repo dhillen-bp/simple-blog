@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const authRoutes = require("./src/routes/auth");
 const blogRoutes = require("./src/routes/blog");
+const tagRoutes = require("./src/routes/tag");
 const mongoose = require("mongoose");
 const multer = require("multer");
 const path = require("path");
@@ -39,22 +40,12 @@ app.use(
 );
 
 // alternatif
-// const cors = require("cors");
-// app.use(cors());
-
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET, POST, PUT, DELETE, PATCH, OPTIONS"
-  );
-  res.setHeader("Access-Control-Allow-Header", "Content-Type, Authorization");
-  res.setHeader("Cross-Origin-Opener-Policy", "same-origin-allow-popups");
-  next();
-});
+const cors = require("cors");
+app.use(cors());
 
 app.use("/v1/auth", authRoutes);
 app.use("/v1/blog", blogRoutes);
+app.use("/v1/tag", tagRoutes);
 
 app.use((error, req, res, next) => {
   const status = error.errorStatus || 500;

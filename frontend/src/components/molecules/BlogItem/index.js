@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button, Gap } from "../../atoms";
 import "./blogItem.scss";
 import { useNavigate } from "react-router-dom";
@@ -11,19 +11,18 @@ const BlogItem = (props) => {
   const navigate = useNavigate();
   const [userOnAuthChanged, setUserOnAuthChanged] = useState(false);
 
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      // User is signed in, see docs for a list of available properties
-      // https://firebase.google.com/docs/reference/js/auth.user
-      // const uid = user.uid;
-      console.log("user onAuth: ", user);
-      setUserOnAuthChanged(true);
-    } else {
-      // User is signed out
-      // ...
-      setUserOnAuthChanged(false);
-    }
-  });
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUserOnAuthChanged(true);
+      } else {
+        setUserOnAuthChanged(false);
+      }
+    });
+
+    // Clean up the subscription when the component unmounts
+    return () => unsubscribe();
+  }, []);
 
   const { image, title, name, date, body, _id, onDelete } = props;
 

@@ -3,6 +3,7 @@ import { Button, Gap, Input, TextArea, Upload, Link } from "../../components";
 import "./createBlog.scss";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
+
 import {
   postToAPI,
   setForm,
@@ -43,8 +44,10 @@ const CreateBlog = (props) => {
   const onSubmit = () => {
     if (isUpdate) {
       updateToAPI(form, id);
+      navigate("/");
     }
     postToAPI(form);
+    navigate("/");
   };
 
   const onImageUpload = (e) => {
@@ -52,6 +55,9 @@ const CreateBlog = (props) => {
     dispatch(setForm("image", file));
     dispatch(setImgPreview(URL.createObjectURL(file)));
   };
+
+  // const token = sessionStorage.getItem("accessToken");
+  // console.log("session token: ", token);
 
   return (
     <div className="blog-post">

@@ -1,25 +1,24 @@
 const { verifyToken } = require("../config/firebaseAdminConfig.js");
-const { auth } = require("../config/firebaseConfig.js");
 
 const authMiddleware = async (req, res, next) => {
-  if (!req.headers.authorization) {
+  let token = req.headers.authorization;
+
+  if (!token) {
     return res.status(401).json({ error: "Must be authenticated!" });
   } else {
     try {
-      const authHeader = req.headers.authorization;
-      const token = authHeader.substring(7);
-      //   const idToken = req.headers.authorization.replace("Bearer ", token);
-      //   console.log(auth.currentUser);
-      const idToken = await auth.currentUser.getIdToken();
-      //   console.log(idToken);
-      if (token !== idToken) {
-        return res.status(401).json({ error: "Token invalid!" });
-      }
+      token = token.replace("Bearer ", "");
+      // Verifikasi token dengan menggunakan kode verifikasi yang sesuai, misalnya dengan menggunakan firebaseAdminConfig.js
+      const user = await verifyToken(token);
+      console.log("token :", token);
+      console.log("Decoded user:", user);
 
-      const user = await verifyToken(idToken); // Menunggu verifikasi token
-      req.user = user; // Menyimpan informasi user dalam request jika diperlukan di middleware berikutnya
+      // Jika token valid, Anda dapat menyimpan informasi pengguna di req.user atau property lain
+      req.user = user;
+
       next();
     } catch (error) {
+      console.log("midleware error: ", error);
       return res.status(401).json({ error: "Authentication failed!" });
     }
   }

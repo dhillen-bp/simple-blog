@@ -19,6 +19,12 @@ const BlogPost = new Schema(
       type: Object,
       required: true,
     },
+    // tags: [
+    //   {
+    //     type: Schema.Types.ObjectId,
+    //     ref: "Tag",
+    //   },
+    // ],
   },
   {
     timestamps: true,
