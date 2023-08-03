@@ -1,10 +1,11 @@
 const { validationResult } = require("express-validator");
 const BlogPost = require("../models/blog");
+const Tag = require("../models/tag");
 const path = require("path");
 const fs = require("fs");
 const { auth } = require("../../config/firebaseConfig");
 
-exports.createBlogPost = (req, res, next) => {
+exports.createBlogPost = async (req, res, next) => {
   const errors = validationResult(req);
 
   // jika ada error
@@ -28,30 +29,55 @@ exports.createBlogPost = (req, res, next) => {
   const body = req.body.body;
 
   const user = req.user;
-  console.log("req.user: ", user);
+
   if (!user) {
     res.status(401).json({ user, message: "Author not authenticated!" });
   }
 
-  const Posting = new BlogPost({
-    title: title,
-    body: body,
-    image: image,
-    author: {
-      uid: "1",
-      name: "user",
-    },
-  });
+  // Create an array to store the tags
+  const tags = req.body.tags.trim().split(",");
 
-  Posting.save()
-    .then((result) => {
-      res
-        .status(201)
-        .json({ message: "Create Blog Post Success", data: result });
-    })
-    .catch((err) => {
-      console.log("err ", err);
+  // Fetch the tag documents using the tags' slugs received in the request
+  try {
+    const tagObjects = await Promise.all(
+      tags.map(async (tagSlug) => {
+        const tag = await Tag.findOne({ slug: tagSlug });
+        return tag;
+      })
+    );
+
+    // Filter out any null values (tags not found) from the array
+    const filteredTags = tagObjects.filter((tag) => tag !== null);
+
+    // If any of the tags were not found, handle the error
+    if (tagObjects.length !== filteredTags.length) {
+      throw new Error("Some tags not found");
+    }
+
+    // If all tags were found, create the BlogPost with the tags
+    const Posting = new BlogPost({
+      title: title,
+      body: body,
+      image: image,
+      author: {
+        uid: user.uid,
+        name: user.name,
+      },
+      tags: filteredTags,
     });
+
+    const savedPost = await Posting.save();
+
+    res.status(201).json({
+      message: "Create Blog Post Success",
+      data: savedPost,
+    });
+  } catch (error) {
+    console.log("Error creating blog post:", error);
+    res.status(500).json({
+      message: "Error creating blog post",
+    });
+  }
 };
 
 exports.getAllBlogPost = (req, res, next) => {
@@ -65,7 +91,8 @@ exports.getAllBlogPost = (req, res, next) => {
       totalItems = count;
       return BlogPost.find()
         .skip((parseInt(currentPage) - 1) * parseInt(perPage))
-        .limit(parseInt(perPage));
+        .limit(parseInt(perPage))
+        .populate("tags");
     })
     .then((result) => {
       res.status(200).json({
@@ -79,22 +106,12 @@ exports.getAllBlogPost = (req, res, next) => {
     .catch((err) => {
       next(err);
     });
-
-  // BlogPost.find()
-  //   .then((result) => {
-  //     res.status(200).json({
-  //       message: "Data Blog Post berhasil dipanggil",
-  //       data: result,
-  //     });
-  //   })
-  //   .catch((err) => {
-  //     next(err);
-  //   });
 };
 
 exports.getBlogPostById = (req, res, next) => {
   const postId = req.params.postId;
   BlogPost.findById(postId)
+    .populate("tags")
     .then((result) => {
       if (!result) {
         const error = new Error("Input Value Tidak Sesuai");
@@ -111,7 +128,7 @@ exports.getBlogPostById = (req, res, next) => {
     });
 };
 
-exports.updateBlogPost = (req, res, next) => {
+exports.updateBlogPost = async (req, res, next) => {
   const errors = validationResult(req);
 
   // jika ada error
@@ -134,6 +151,22 @@ exports.updateBlogPost = (req, res, next) => {
   const image = req.file.path;
   const body = req.body.body;
   const postId = req.params.postId;
+  const tags = req.body.tags.trim().split(",");
+
+  const tagObjects = await Promise.all(
+    tags.map(async (tagSlug) => {
+      const tag = await Tag.findOne({ slug: tagSlug });
+      return tag;
+    })
+  );
+
+  // Filter out any null values (tags not found) from the array
+  const filteredTags = tagObjects.filter((tag) => tag !== null);
+
+  // If any of the tags were not found, handle the error
+  if (tagObjects.length !== filteredTags.length) {
+    throw new Error("Some tags not found");
+  }
 
   BlogPost.findById(postId)
     .then((post) => {
@@ -145,6 +178,7 @@ exports.updateBlogPost = (req, res, next) => {
       post.title = title;
       post.body = body;
       post.image = image;
+      post.tags = filteredTags;
 
       return post.save();
     })

@@ -10,8 +10,8 @@ const authMiddleware = async (req, res, next) => {
       token = token.replace("Bearer ", "");
       // Verifikasi token dengan menggunakan kode verifikasi yang sesuai, misalnya dengan menggunakan firebaseAdminConfig.js
       const user = await verifyToken(token);
-      console.log("token :", token);
-      console.log("Decoded user:", user);
+      // console.log("token :", token);
+      // console.log("Decoded user:", user);
 
       // Jika token valid, Anda dapat menyimpan informasi pengguna di req.user atau property lain
       req.user = user;
