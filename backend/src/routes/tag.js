@@ -5,5 +5,6 @@ const tagController = require("../controllers/tag");
 
 // CREATE -> POST
 router.post("/create", tagController.createTag);
+router.get("/tags", tagController.getAllTag);
 
 module.exports = router;

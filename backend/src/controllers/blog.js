@@ -3,7 +3,6 @@ const BlogPost = require("../models/blog");
 const Tag = require("../models/tag");
 const path = require("path");
 const fs = require("fs");
-const { auth } = require("../../config/firebaseConfig");
 
 exports.createBlogPost = async (req, res, next) => {
   const errors = validationResult(req);
@@ -82,7 +81,7 @@ exports.createBlogPost = async (req, res, next) => {
 
 exports.getAllBlogPost = (req, res, next) => {
   const currentPage = req.query.page || 1;
-  const perPage = req.query.perPage || 5;
+  const perPage = req.query.perPage || 6;
   let totalItems;
 
   BlogPost.find()
@@ -95,9 +94,17 @@ exports.getAllBlogPost = (req, res, next) => {
         .populate("tags");
     })
     .then((result) => {
+      const modifiedResult = result.map((blog) => {
+        const shortenedBody =
+          blog.body.length > 100
+            ? blog.body.substring(0, 100) + "..."
+            : blog.body;
+        return { ...blog._doc, body: shortenedBody };
+      });
+
       res.status(200).json({
         message: "Data Blog Post berhasil dipanggil",
-        data: result,
+        data: modifiedResult,
         total_data: totalItems,
         per_page: perPage,
         current_page: currentPage,
@@ -133,7 +140,7 @@ exports.updateBlogPost = async (req, res, next) => {
 
   // jika ada error
   if (!errors.isEmpty()) {
-    const err = new Error("Input Value Tidak Sesuai");
+    const err = new Error("Input Value Does Not Match");
     err.errorStatus = 400;
     err.data = errors.array();
     throw err;
@@ -141,7 +148,7 @@ exports.updateBlogPost = async (req, res, next) => {
 
   // mengecek file tidak ada
   if (!req.file) {
-    const err = new Error("Image harus diupload");
+    const err = new Error("Image must be uploaded");
     err.errorStatus = 422;
     err.data = errors.array();
     throw err;
@@ -171,10 +178,20 @@ exports.updateBlogPost = async (req, res, next) => {
   BlogPost.findById(postId)
     .then((post) => {
       if (!post) {
-        const err = new Error("Blog Post tidak ditemukan");
+        const err = new Error("Blog Post not found");
         err.status = 404;
         throw err;
       }
+
+      // Check if the logged-in user is the author of the blog post
+      if (post.author.uid.toString() !== req.user._id.toString()) {
+        const err = new Error(
+          "Unauthorized: You are not the author of this blog post"
+        );
+        err.status = 403; // Forbidden status code
+        throw err;
+      }
+
       post.title = title;
       post.body = body;
       post.image = image;
@@ -225,4 +242,42 @@ const removeImage = (filePath) => {
   fs.unlink(filePath, (err) => {
     console.log(err);
   });
+};
+
+exports.getAllMyBlog = (req, res, next) => {
+  const currentPage = req.query.page || 1;
+  const perPage = req.query.perPage || 6;
+  let totalItems;
+
+  const loggedInUserId = req.user.uid;
+
+  BlogPost.find({ "author.uid": loggedInUserId })
+    .countDocuments()
+    .then((count) => {
+      totalItems = count;
+      return BlogPost.find({ "author.uid": loggedInUserId })
+        .skip((parseInt(currentPage) - 1) * parseInt(perPage))
+        .limit(parseInt(perPage))
+        .populate("tags");
+    })
+    .then((result) => {
+      const modifiedResult = result.map((blog) => {
+        const shortenedBody =
+          blog.body.length > 100
+            ? blog.body.substring(0, 100) + "..."
+            : blog.body;
+        return { ...blog._doc, body: shortenedBody };
+      });
+
+      res.status(200).json({
+        message: "Data Blog Post berhasil dipanggil",
+        data: modifiedResult,
+        total_data: totalItems,
+        per_page: perPage,
+        current_page: currentPage,
+      });
+    })
+    .catch((err) => {
+      next(err);
+    });
 };

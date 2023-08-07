@@ -28,5 +28,6 @@ router.put(
   blogController.updateBlogPost
 );
 router.delete("/post/:postId", authMiddleware, blogController.deleteBlogPost);
+router.get("/myposts", authMiddleware, blogController.getAllMyBlog);
 
 module.exports = router;

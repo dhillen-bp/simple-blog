@@ -18,3 +18,14 @@ exports.createTag = (req, res, next) => {
       console.log("err ", err);
     });
 };
+
+exports.getAllTag = (req, res, next) => {
+  Tag.find()
+    .then((tags) => {
+      res.status(200).json({ message: "Get All Tags Success", data: tags });
+    })
+    .catch((err) => {
+      console.log("err ", err);
+      res.status(500).json({ message: "Error getting tags" });
+    });
+};
