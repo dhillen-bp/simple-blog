@@ -1,58 +1,24 @@
 import React from "react";
-import {
-  FacebookIcon,
-  InstagramIcon,
-  TwitterIcon,
-  WhatsappIcon,
-} from "../../../assets";
-import "./footer.scss";
-
-const Icon = ({ img }) => {
-  return (
-    <div className="icon-wrapper">
-      <img className="icon-img" src={img} alt="icon" />
-    </div>
-  );
-};
+import { useNavigate } from "react-router-dom";
 
 const Footer = () => {
+  const navigate = useNavigate();
   return (
-    <footer className="footer">
-      <div className="footer-top">
-        <div className="social-media">
-          <div className="social-icons">
-            <Icon img={FacebookIcon} />
-            <Icon img={TwitterIcon} />
-            <Icon img={InstagramIcon} />
-            <Icon img={WhatsappIcon} />
-          </div>
-        </div>
-      </div>
-      <div className="footer-bottom">
-        <ul className="footer-menu">
-          <li>
-            <p className="title">About Us</p>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa in
-              voluptates aspernatur nemo fuga.
-            </p>
-          </li>
-          <li>
-            <p className="title">Contact Us</p>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa in
-              voluptates aspernatur nemo fuga.
-            </p>
-          </li>
-          <li>
-            <p className="title">Need Help?</p>
-            <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsa in
-              voluptates aspernatur nemo fuga.
-            </p>
-          </li>
-        </ul>
-      </div>
+    <footer className="px-20 bg-gradient-to-r from-orange-400 via-orange-500 to-orange-600 h-20 flex flex-col items-center justify-center text-center text-slate-100">
+      <p className="">
+        Copyright by ©️ <span className="font-bold text-white"> Dhillen </span>
+      </p>
+      <p className="">
+        Want to contribute?
+        <span
+          className="underline hover:text-white pl-1 cursor-pointer"
+          onClick={() => {
+            navigate("/create-blog");
+          }}
+        >
+          Create a Post Now
+        </span>
+      </p>
     </footer>
   );
 };

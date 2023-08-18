@@ -29,5 +29,11 @@ router.put(
 );
 router.delete("/post/:postId", authMiddleware, blogController.deleteBlogPost);
 router.get("/myposts", authMiddleware, blogController.getAllMyBlog);
+router.patch("/post/:postId/like", authMiddleware, blogController.handleLikes);
+router.patch(
+  "/post/:postId/unlike",
+  authMiddleware,
+  blogController.handleUnlikes
+);
 
 module.exports = router;

@@ -4,7 +4,7 @@ import { Footer, Header } from "../../components/molecules";
 import CreateBlog from "../CreateBlog";
 import DetailBlog from "../DetailBlog";
 import Home from "../Home";
-import "./mainApp.scss";
+import MyBlog from "../MyBlog";
 import PrivateRoute from "../../config/routes/privateRoute";
 
 const MainApp = () => {
@@ -13,7 +13,7 @@ const MainApp = () => {
       <div className="header-wrapper">
         <Header />
       </div>
-      <div className="content-wrapper">
+      <div className="mx-auto mt-20 px-10 py-5 w-full md:px-20">
         <Switch>
           {/* <Route path="/create-blog/:id?" element={<CreateBlog />}></Route> */}
           <Route
@@ -24,15 +24,16 @@ const MainApp = () => {
               </PrivateRoute>
             }
           />
+          <Route path="/detail-blog/:id" element={<DetailBlog />}></Route>
+          <Route path="/" element={<Home />}></Route>
           <Route
-            path="/detail-blog/:id"
+            path="/myblog"
             element={
               <PrivateRoute>
-                <DetailBlog />
+                <MyBlog />
               </PrivateRoute>
             }
-          ></Route>
-          <Route path="/" element={<Home />}></Route>
+          />
         </Switch>
       </div>
       <div className="footer-wrapper">

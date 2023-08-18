@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React from "react";
-import { LoginBg } from "../../assets";
+import { GoogleIcon, LoginBg } from "../../assets";
 import { Button, Gap, Input, Link } from "../../components";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -91,41 +91,73 @@ const Login = () => {
 
   const navigate = useNavigate();
   return (
-    <div className="main-page">
-      <div className="left">
-        <img src={LoginBg} className="bg-image" alt="imageBg" />
+    <div className="flex flex-col md:flex-row mx-auto mt-2 px-10 py-10 w-full h-full md:px-20 md:pt-20 md:items-start md:justify-around">
+      <div className="shadow-md rounded-md p-2 md:p-5 h-96 md:w-1/3 self-center ">
+        <img src={LoginBg} alt="Login-Img" className="" />
       </div>
-      <div className="right">
-        <p className="title">Form Login</p>
-        <Input
-          label="Email"
-          placeholder="Email"
-          onChange={(e) => dispatch(setFormLogin("email", e.target.value))}
-        />
-        <Gap height={18} />
-        <Input
-          type="password"
-          label="Password"
-          placeholder="Password"
-          onChange={(e) => dispatch(setFormLogin("password", e.target.value))}
-        />
-        <Gap height={30} />
-        <Button title="Login" onClick={handleEmailSignIn} />
-        <Gap height={18} />
-        <Link
-          title="Belum punya akun? Daftar Sekarang"
+
+      <div className="mt-5 md:ml-10 md:w-1/2 md:mt-0 ">
+        <h1 className="text-xl font-bold border-b-2 border-orange-500 pb-1 mb-4 md:mb-14">
+          Sign In
+        </h1>
+        <div className="mb-4 md:mb-6">
+          <label htmlFor="email" className="block font-medium">
+            Email
+          </label>
+          <input
+            type="email"
+            name="email"
+            id="email"
+            className="w-full px-2 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-400"
+            onChange={(e) => dispatch(setFormLogin("email", e.target.value))}
+          />
+        </div>
+        <div className="mb-4 md:mb-6">
+          <label htmlFor="password" className="block font-medium">
+            Password
+          </label>
+          <input
+            type="password"
+            name="password"
+            id="password"
+            className="w-full px-2 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-400"
+            onChange={(e) => dispatch(setFormLogin("password", e.target.value))}
+          />
+        </div>
+        <div className="mb-4 md:mb-6">
+          <button
+            className="w-full px-4 py-2 rounded-lg bg-orange-500 text-white font-medium focus:outline-none focus:ring-2 focus:ring-orange-400"
+            onClick={handleEmailSignIn}
+          >
+            Sign In
+          </button>
+        </div>
+        <div className="mb-4 md:mb-6">
+          <button
+            className="w-full px-4 py-2 rounded-lg bg-blue-600 text-white font-medium focus:outline-none focus:ring-2 focus:ring-blue-400"
+            onClick={handleGoogleSignIn}
+          >
+            Sign In With Google
+            <i className="bi bi-google ml-1"></i>
+          </button>
+        </div>
+        <p
+          className="text-center mb-1"
           onClick={() => {
             navigate("/register");
           }}
-        />
-        <Link title="Lupa Password? Reset" onClick={handleResetPassword} />
-        <button
-          type="submit"
-          className="btn btn-secondary w-100 mb-3"
-          onClick={handleGoogleSignIn}
         >
-          SigIn With Google <i className="bi bi-google"></i>
-        </button>
+          Don't have an account?
+          <span className="text-blue-600 ml-1 cursor-pointer inline-block hover:underline">
+            Sign Up Now
+          </span>
+        </p>
+        <p className="text-center" onClick={handleResetPassword}>
+          Forget Password?
+          <span className="text-blue-600 ml-1 cursor-pointer inline-block hover:underline">
+            Reset Now
+          </span>
+        </p>
       </div>
     </div>
   );

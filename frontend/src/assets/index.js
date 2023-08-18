@@ -1,23 +1,8 @@
-import RegisterBg from "./imgs/register-bg.jpg";
-import LoginBg from "./imgs/login-bg.jpg";
-import LogoIcon from "./icon/mern-logo.png";
-import DiscordIcon from "./icon/discord.png";
-import FacebookIcon from "./icon/facebook.png";
-import InstagramIcon from "./icon/instagram.png";
-import TelegramIcon from "./icon/telegram.png";
-import TwitterIcon from "./icon/twitter.png";
-import WhatsappIcon from "./icon/whatsapp.png";
-import mernIcon from "./imgs/mern-blog.png";
+import LoginBg from "./images/blog-bg.svg";
+import ComputerImg from "./images/computer.jpeg";
 
-export {
-  RegisterBg,
-  LoginBg,
-  LogoIcon,
-  mernIcon,
-  DiscordIcon,
-  FacebookIcon,
-  InstagramIcon,
-  TelegramIcon,
-  TwitterIcon,
-  WhatsappIcon,
-};
+import LogoIcon from "./icons/blog-logo.png";
+import LineIcone from "./icons/icon-line.png";
+import GoogleIcon from "./icons/icons-google.svg";
+
+export { LoginBg, LogoIcon, LineIcone, ComputerImg, GoogleIcon };

@@ -1,5 +1,5 @@
 import { Routes, store } from "../config";
-import "./App.css";
+// import "./App.css";
 import { Provider } from "react-redux";
 
 function App() {

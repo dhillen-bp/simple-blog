@@ -4,6 +4,7 @@ import homeReducer from "./homeReducer";
 import createBlogReducer from "./createBlogReducer";
 import loginReducer from "./loginReducer";
 import registerReducer from "./registerReducer";
+import myBlogReducer from "./myBlogReducer";
 
 const reducer = combineReducers({
   globalReducer,
@@ -11,6 +12,7 @@ const reducer = combineReducers({
   createBlogReducer,
   loginReducer,
   registerReducer,
+  myBlogReducer,
 });
 
 export default reducer;

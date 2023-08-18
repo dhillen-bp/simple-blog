@@ -184,7 +184,7 @@ exports.updateBlogPost = async (req, res, next) => {
       }
 
       // Check if the logged-in user is the author of the blog post
-      if (post.author.uid.toString() !== req.user._id.toString()) {
+      if (post.author.uid.toString() !== req.user.uid.toString()) {
         const err = new Error(
           "Unauthorized: You are not the author of this blog post"
         );
@@ -220,6 +220,16 @@ exports.deleteBlogPost = (req, res, next) => {
         err.status = 404;
         throw err;
       }
+
+      // Check if the logged-in user is the author of the blog post
+      if (post.author.uid.toString() !== req.user.uid.toString()) {
+        const err = new Error(
+          "Unauthorized: You are not the author of this blog post"
+        );
+        err.status = 403; // Forbidden status code
+        throw err;
+      }
+
       removeImage(post.image);
       return BlogPost.findByIdAndRemove(postId);
     })
@@ -261,20 +271,80 @@ exports.getAllMyBlog = (req, res, next) => {
         .populate("tags");
     })
     .then((result) => {
-      const modifiedResult = result.map((blog) => {
-        const shortenedBody =
-          blog.body.length > 100
-            ? blog.body.substring(0, 100) + "..."
-            : blog.body;
-        return { ...blog._doc, body: shortenedBody };
-      });
+      if (result.length === 0) {
+        res.status(404).json({
+          message: "Posts Not Created",
+          data: [],
+          total_data: 0,
+          per_page: perPage,
+          current_page: currentPage,
+        });
+      } else {
+        const modifiedResult = result.map((blog) => {
+          const shortenedBody =
+            blog.body.length > 100
+              ? blog.body.substring(0, 100) + "..."
+              : blog.body;
+          return { ...blog._doc, body: shortenedBody };
+        });
 
+        res.status(200).json({
+          message: "Data Blog Post berhasil dipanggil",
+          data: modifiedResult,
+          total_data: totalItems,
+          per_page: perPage,
+          current_page: currentPage,
+        });
+      }
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.handleLikes = (req, res, next) => {
+  const postId = req.params.postId;
+
+  BlogPost.findById(postId)
+    .then((post) => {
+      if (!post) {
+        const err = new Error("Blog Post tidak ditemukan");
+        err.status = 404;
+        throw err;
+      }
+
+      post.likes += 1;
+      return post.save();
+    })
+    .then((result) => {
       res.status(200).json({
-        message: "Data Blog Post berhasil dipanggil",
-        data: modifiedResult,
-        total_data: totalItems,
-        per_page: perPage,
-        current_page: currentPage,
+        message: "Like Post Berhasil",
+        data: result,
+      });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.handleUnlikes = (req, res, next) => {
+  const postId = req.params.postId;
+
+  BlogPost.findById(postId)
+    .then((post) => {
+      if (!post) {
+        const err = new Error("Blog Post tidak ditemukan");
+        err.status = 404;
+        throw err;
+      }
+
+      post.likes -= 1;
+      return post.save();
+    })
+    .then((result) => {
+      res.status(200).json({
+        message: "Unlike Post Berhasil",
+        data: result,
       });
     })
     .catch((err) => {

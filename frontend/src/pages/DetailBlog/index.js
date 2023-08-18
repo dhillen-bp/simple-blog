@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "../../components";
-import "./detailBlog.scss";
+import { FaHeart } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
@@ -23,17 +23,31 @@ const DetailBlog = (props) => {
 
   if (data.author) {
     return (
-      <div className="detail-blog-wrapper">
-        <img
-          className="img-cover"
-          src={`http://localhost:4000/${data.image}`}
-          alt="thumb"
-        />
-        <p className="blog-title">{data.title}</p>
-        <p className="blog-author">
+      <div className="mx-auto -mt-16 w-3/4 md:px-20">
+        <h1 className="text-lg font-bold md:text-xl text-center mt-5">
+          {data.title}
+        </h1>
+        <p className="text-sm text-center mt-2 text-slate-500">
+          Tags: <span>{data.tags.map((tag) => tag.name).join(", ")}</span>
+        </p>
+        <p className="text-md mt-3 text-slate-500">
           {data.author.name} - {data.createdAt}
         </p>
-        <p className="blog-body">{data.body}</p>
+        <img
+          src={`http://localhost:4000/${data.image}`}
+          alt="Article-Img"
+          className="mx-auto w-full mt-3 shadow-md"
+        />
+        <button className="mx-auto mt-2 flex items-center bg-white text-black font-bold py-2 px-2 rounded">
+          <FaHeart />
+        </button>
+        <p
+          className="text-md mt-5 mb-10 first-letter:text-7xl first-letter:font-bold first-letter:text-slate-900
+      first-letter:mr-3 first-letter:float-left"
+        >
+          {data.body}
+        </p>
+
         <Link
           title="Kembali ke Home"
           onClick={() => {

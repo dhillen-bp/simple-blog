@@ -15,6 +15,7 @@ export const postToAPI = (form) => {
   data.append("title", form.title);
   data.append("body", form.body);
   data.append("image", form.image);
+  data.append("tags", form.tags);
 
   axios
     .post("http://localhost:4000/v1/blog/post", data, {

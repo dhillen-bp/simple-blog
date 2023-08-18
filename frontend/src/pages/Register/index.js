@@ -1,6 +1,6 @@
 import React from "react";
-import { RegisterBg } from "../../assets";
-import { Button, Gap, Input, Link } from "../../components";
+// import { RegisterBg } from "../../assets";
+
 import "./register.scss";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -12,6 +12,7 @@ import {
   updateProfile,
   sendEmailVerification,
 } from "firebase/auth";
+import { LoginBg } from "../../assets";
 
 const Register = () => {
   const navigate = useNavigate();
@@ -48,41 +49,73 @@ const Register = () => {
   };
 
   return (
-    <div className="main-page">
-      <div className="left">
-        <img src={RegisterBg} className="bg-image" alt="imageBg" />
+    <div className="flex flex-col md:flex-row mx-auto mt-2 px-10 py-10 w-full h-full md:px-20 md:pt-20 md:items-center md:justify-around">
+      <div className="shadow-md rounded-md p-2 md:p-5 h-96 md:w-1/3 self-center">
+        <img src={LoginBg} alt="Login-Img" className="" />
       </div>
-      <div className="right">
-        <p className="title">Form Register</p>
-        <Input
-          label="Full Name"
-          placeholder="Full Name"
-          onChange={(e) => dispatch(setFormRegister("name", e.target.value))}
-        />
-        <Gap height={18} />
-        <Input
-          label="Email"
-          placeholder="Email"
-          onChange={(e) => dispatch(setFormRegister("email", e.target.value))}
-        />
-        <Gap height={18} />
-        <Input
-          type="password"
-          label="Password"
-          placeholder="Password"
-          onChange={(e) =>
-            dispatch(setFormRegister("password", e.target.value))
-          }
-        />
-        <Gap height={30} />
-        <Button title="Register" onClick={handleRegister} />
-        <Gap height={18} />
-        <Link
-          title="Kembali ke Login"
+
+      <div className="mt-5 md:ml-10 md:w-1/2 md:mt-0 ">
+        <h1 className="text-xl font-bold border-b-2 border-orange-500 pb-1 mb-4 md:mb-14">
+          Sign Up
+        </h1>
+        <div className="mb-4 md:mb-6">
+          <label htmlFor="name" className="block font-medium">
+            Name
+          </label>
+          <input
+            type="text"
+            name="name"
+            id="name"
+            className="w-full px-2 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-400"
+            onChange={(e) => dispatch(setFormRegister("name", e.target.value))}
+          />
+        </div>
+        <div className="mb-4 md:mb-6">
+          <label htmlFor="email" className="block font-medium">
+            Email
+          </label>
+          <input
+            type="email"
+            name="email"
+            id="email"
+            className="w-full px-2 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-400"
+            onChange={(e) => dispatch(setFormRegister("email", e.target.value))}
+          />
+        </div>
+        <div className="mb-4 md:mb-6">
+          <label htmlFor="password" className="block font-medium">
+            Password
+          </label>
+          <input
+            type="password"
+            name="password"
+            id="password"
+            className="w-full px-2 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-orange-400"
+            onChange={(e) =>
+              dispatch(setFormRegister("password", e.target.value))
+            }
+          />
+        </div>
+        <div className="mb-4 md:mb-6">
+          <button
+            className="w-full px-4 py-2 rounded-lg bg-orange-500 text-white font-medium focus:outline-none focus:ring-2 focus:ring-orange-400"
+            onClick={handleRegister}
+          >
+            Sign Up
+          </button>
+        </div>
+
+        <p
+          className="text-center mb-1"
           onClick={() => {
             navigate("/login");
           }}
-        />
+        >
+          Have an account?
+          <span className="text-blue-600 ml-1 cursor-pointer inline-block hover:underline">
+            Sign In
+          </span>
+        </p>
       </div>
     </div>
   );

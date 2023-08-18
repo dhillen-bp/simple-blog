@@ -25,6 +25,10 @@ const BlogPost = new Schema(
         ref: "Tag",
       },
     ],
+    likes: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,
